@@ -3,6 +3,7 @@ import openDb from './db/database.mjs';
 const docs = {
     getAll: async function getAll() {
         let db = await openDb();
+        console.log("db", db);
 
         try {
             return await db.all('SELECT rowid as id, * FROM documents');
@@ -19,11 +20,11 @@ const docs = {
         let db = await openDb();
 
         try {
-            return await db.get('SELECT * FROM documents WHERE rowid=?', id);
+            return await db.get('SELECT rowid as id, * FROM documents WHERE rowid=?', id);
         } catch (e) {
             console.error(e);
 
-            return {};
+            return null;
         } finally {
             await db.close();
         }
@@ -43,7 +44,25 @@ const docs = {
         } finally {
             await db.close();
         }
+    },
+    
+    updateOne: async function updateOne(id, body) {
+        let db = await openDb();
+
+        try {
+            return await db.run(
+                'UPDATE documents SET title = ?, content = ? WHERE rowid = ?',
+                body.title,
+                body.content,
+                id
+            );
+        } catch (e) {
+            console.error(e);
+        } finally {
+            await db.close();
+        }
     }
+
 };
 
 export default docs;

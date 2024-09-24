@@ -4,7 +4,8 @@
   "description": "Starter project for DV1677 JSRamverk",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test node app.mjs",
+    "start": "node app.mjs"
   },
   "keywords": [],
   "author": "",

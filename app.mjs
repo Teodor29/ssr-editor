@@ -33,11 +33,29 @@ app.post("/", async (req, res) => {
     return res.redirect(`/${result.lastID}`);
 });
 
+app.post("/update", async (req, res) => {
+    const { id, title, content } = req.body;
+
+    console.log("id", id);
+    console.log("title", title);
+    console.log("content", content);
+    
+    if (!id || !title || !content) {
+        return res.status(404).send("ID, title, and content are required.");
+    }
+
+    documents.updateOne(id, { title, content });
+
+    return res.redirect(`/${id}`);
+
+});
+
 app.get('/:id', async (req, res) => {
-    return res.render(
-        "doc",
-        { doc: await documents.getOne(req.params.id) }
-    );
+    const doc = await documents.getOne(req.params.id);
+    if (!doc) {
+        return res.status(404).send("Document not found.");
+    }
+    return res.render("doc", { doc });
 });
 
 app.get('/', async (req, res) => {
